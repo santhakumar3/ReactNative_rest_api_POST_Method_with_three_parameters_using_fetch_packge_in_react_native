@@ -1,117 +1,113 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
+import React, {useState} from 'react';
+import {View, TextInput, Button, StyleSheet, Text} from 'react-native';
+import Modal from 'react-native-modal';
 
-import React from 'react';
-import type {PropsWithChildren} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+const App = () => {
+  const [name, setName] = useState('');
+  const [salary, setSalary] = useState('');
+  const [age, setAge] = useState('');
+  const [isSuccessModalVisible, setSuccessModalVisible] = useState(false);
+  const [isFailureModalVisible, setFailureModalVisible] = useState(false);
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+  const toggleSuccessModal = () =>
+    setSuccessModalVisible(!isSuccessModalVisible);
+  const toggleFailureModal = () =>
+    setFailureModalVisible(!isFailureModalVisible);
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
+  const handlePostRequest = async () => {
+    try {
+      const response = await fetch(
+        'https://dummy.restapiexample.com/api/v1/create',
+        {
+          method: 'POST',
+          // headers: {
+          //   'Content-Type': 'application/json',
+          // },
+          body: JSON.stringify({name, salary, age}),
+        },
+      );
 
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
+      const data = await response.json();
 
-function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+      if (response.ok) {
+        // Success
+        toggleSuccessModal();
+      } else {
+        // Failure
+        toggleFailureModal();
+      }
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+      console.log(data);
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
+    <View style={styles.container}>
+      <TextInput
+        style={styles.input}
+        placeholder="Name"
+        value={name}
+        onChangeText={text => setName(text)}
       />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
+      <TextInput
+        style={styles.input}
+        placeholder="Salary"
+        value={salary}
+        onChangeText={text => setSalary(text)}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Age"
+        value={age}
+        onChangeText={text => setAge(text)}
+      />
+      <Button title="Submit" onPress={handlePostRequest} />
+
+      {/* Success Modal */}
+      <Modal isVisible={isSuccessModalVisible}>
+        <View style={styles.modalContainer}>
+          <Text style={styles.modalText}>Success!</Text>
+          <Button title="OK" onPress={toggleSuccessModal} />
         </View>
-      </ScrollView>
-    </SafeAreaView>
+      </Modal>
+
+      {/* Failure Modal */}
+      <Modal isVisible={isFailureModalVisible}>
+        <View style={styles.modalContainer}>
+          <Text style={styles.modalText}>Failure!</Text>
+          <Button title="OK" onPress={toggleFailureModal} />
+        </View>
+      </Modal>
+    </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: 16,
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
+  input: {
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginBottom: 10,
+    padding: 8,
   },
-  sectionDescription: {
-    marginTop: 8,
+  modalContainer: {
+    backgroundColor: 'white',
+    padding: 22,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 4,
+    borderColor: 'rgba(0, 0, 0, 0.1)',
+  },
+  modalText: {
     fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
+    marginBottom: 20,
   },
 });
 

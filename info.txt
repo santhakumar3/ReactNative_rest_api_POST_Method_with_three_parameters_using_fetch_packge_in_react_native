@@ -1,0 +1,39 @@
+
+I Used in build Fetch API Package for ReactNative RestApi Access ( In Build Fetch Package is the common package for RestAPI Access in React Native)
+
+
+
+Rest Api link for Create:  https://dummy.restapiexample.com/api/v1/create
+==============
+
+Method : Post
+=======
+
+
+Fake Rest Api Websites:
+=============================
+
+1.	https://reqres.in
+2.	https://jsonplaceholder.typicode.com
+3.	https://dummyjson.com
+4.	https://dummy.restapiexample.com
+5.	https://mocki.io/fake-json-api
+6.	https://fakestoreapi.com
+7.	https://restful-api.dev
+
+
+I have used 4th (4. https://dummy.restapiexample.com) web link Post Method in this project..
+
+
+Note : 
+=======
+
+I used react native model package for dialog box
+
+package link :    https://www.npmjs.com/package/react-native-modal
+===============
+
+dependency :    install this package ( npm i react-native-modal )
+=============
+
+ "react-native-modal": "^13.0.1"
